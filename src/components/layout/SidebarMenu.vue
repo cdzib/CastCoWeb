@@ -23,12 +23,12 @@
           </a>
         </li>
         <li>
-          <a href="#">
+          <a href="/talents">
             <i class="fa fa-user"></i> Talentos
           </a>
         </li>
         <li>
-          <a href="#">
+          <a href="/agencies">
             <i class="fa fa-user"></i> Agencias
           </a>
         </li>

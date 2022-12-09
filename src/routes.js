@@ -11,6 +11,8 @@ import AccessView from './components/views/Access.vue'
 import ServerView from './components/views/Server.vue'
 import ReposView from './components/views/Repos.vue'
 import AdminView from './components/views/Admin.vue'
+import TalentView from './components/views/Talent.vue'
+
 // Routes
 const routes = [
   {
@@ -26,7 +28,10 @@ const routes = [
         alias: '',
         component: DashboardView,
         name: 'Dashboard',
-        meta: {description: 'Overview of environment'}
+        meta: {
+          requiresAuth: true,
+          description: 'Overview of environment'
+        }
       }, {
         path: 'tables',
         component: TablesView,
@@ -61,8 +66,20 @@ const routes = [
       {
         path: 'admins',
         component: AdminView,
-        name: 'Adminis',
-        meta: {description: 'Listado de administradores'}
+        name: 'Administadores',
+        meta: {description: 'Listado de Administradores', requiresAuth: true}
+      },
+      {
+        path: 'talents',
+        component: TalentView,
+        name: 'Talentos',
+        meta: {description: 'Listado de Talentos', requiresAuth: true}
+      },
+      {
+        path: 'agencies',
+        component: TalentView,
+        name: 'Agencias',
+        meta: {description: 'Listado de Agencias', requiresAuth: true}
       }
     ]
   }, {

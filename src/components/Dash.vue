@@ -59,10 +59,12 @@ export default {
   },
   computed: {
     user () {
+      var user = JSON.parse(localStorage.getItem('user'))
+
       return {
-        displayName: faker.name.findName(),
+        displayName: user.first_name,
         avatar: faker.image.avatar(),
-        roles: [faker.name.jobTitle(), faker.name.jobTitle()]
+        roles: user.role
       }
     }
   }

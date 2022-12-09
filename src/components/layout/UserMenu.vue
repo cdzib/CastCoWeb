@@ -15,7 +15,7 @@
         </p>
       </li>
       <li class="user-footer">
-        <a href="javascript:;" class="btn btn-default btn-flat btn-block">
+        <a href="javascript:;"   v-on:click="logout" class="btn btn-default btn-flat btn-block">
           <i class="fa fa-sign-out"></i>
           <span>Logout</span>
         </a>
@@ -25,8 +25,22 @@
 </template>
 
 <script>
+
 export default {
   name: 'UserMenu',
-  props: ['user']
+  props: ['user'],
+  methods: {
+    logout () {
+      this.$store.commit('SET_USER', null)
+      this.$store.commit('SET_TOKEN', null)
+
+      if (window.localStorage) {
+        window.localStorage.setItem('user', null)
+        window.localStorage.setItem('token', null)
+      }
+
+      this.$router.push('/login')
+    }
+  }
 }
 </script>

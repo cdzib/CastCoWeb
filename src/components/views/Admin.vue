@@ -20,104 +20,34 @@
 
               <div class="row">
                 <div class="col-sm-12 table-responsive">
-                  <table aria-describedby="example1_info" role="grid" id="example1" class="table table-bordered table-striped dataTable">
+                  <table aria-describedby="example1_info" role="grid" id="tableUsers"
+                    class="table table-bordered table-striped dataTable">
                     <thead>
                       <tr role="row">
-                        <th aria-label="Rendering engine: activate to sort column descending" aria-sort="ascending" style="width: 167px;" colspan="1" rowspan="1" aria-controls="example1" tabindex="0" class="sorting_asc">Rendering engine</th>
-                        <th aria-label="Browser: activate to sort column ascending" style="width: 207px;" colspan="1" rowspan="1" aria-controls="example1" tabindex="0" class="sorting">Browser</th>
-                        <th aria-label="Platform(s): activate to sort column ascending" style="width: 182px;" colspan="1" rowspan="1" aria-controls="example1" tabindex="0" class="sorting">Platform(s)</th>
-                        <th aria-label="Engine version: activate to sort column ascending" style="width: 142px;" colspan="1" rowspan="1" aria-controls="example1" tabindex="0" class="sorting">Engine version</th>
-                        <th aria-label="CSS grade: activate to sort column ascending" style="width: 101px;" colspan="1" rowspan="1" aria-controls="example1" tabindex="0" class="sorting">CSS grade</th>
+                        <th aria-label="Rendering engine: activate to sort column descending" aria-sort="ascending"
+                          style="width: 167px;" colspan="1" rowspan="1" aria-controls="example1" tabindex="0"
+                          class="sorting_asc">Email</th>
+                        <th aria-label="Browser: activate to sort column ascending" style="width: 207px;" colspan="1"
+                          rowspan="1" aria-controls="example1" tabindex="0" class="sorting">Nombres</th>
+                        <th aria-label="Engine version: activate to sort column ascending" style="width: 142px;"
+                          colspan="1" rowspan="1" aria-controls="example1" tabindex="0" class="sorting">Apellidos
+                        </th>
+                        <th aria-label="Platform(s): activate to sort column ascending" style="width: 182px;"
+                          colspan="1" rowspan="1" aria-controls="example1" tabindex="0" class="sorting">Instagram</th>
+                        <th aria-label="CSS grade: activate to sort column ascending" style="width: 101px;" colspan="1"
+                          rowspan="1" aria-controls="example1" tabindex="0" class="sorting">Rol</th>
                       </tr>
                     </thead>
                     <tbody>
-                      <tr class="even" role="row">
-                        <td class="sorting_1">Blink</td>
-                        <td>Iridium  54.0</td>
-                        <td>GNU/Linux</td>
-                        <td>54</td>
-                        <td>A</td>
+                      <tr class="even" role="row" v-for="(user, index) in users" :key="index">
+                        <td class="sorting_1">{{ user.email }}</td>
+                        <td>{{ user.first_name }}</td>
+                        <td>{{ user.last_name }}</td>
+                        <td>{{ user.instagram }}</td>
+                        <td>{{ user.role }}</td>
                       </tr>
-                      <tr class="odd" role="row">
-                        <td class="sorting_1">Gecko</td>
-                        <td>Firefox 1.0</td>
-                        <td>Win 98+ / OSX.2+</td>
-                        <td>1.7</td>
-                        <td>A</td>
-                      </tr>
-                      <tr class="even" role="row">
-                        <td class="sorting_1">Gecko</td>
-                        <td>Firefox 1.5</td>
-                        <td>Win 98+ / OSX.2+</td>
-                        <td>1.8</td>
-                        <td>A</td>
-                      </tr>
-                      <tr class="odd" role="row">
-                        <td class="sorting_1">Gecko</td>
-                        <td>Firefox 2.0</td>
-                        <td>Win 98+ / OSX.2+</td>
-                        <td>1.8</td>
-                        <td>A</td>
-                      </tr>
-                      <tr class="even" role="row">
-                        <td class="sorting_1">Gecko</td>
-                        <td>Firefox 3.0</td>
-                        <td>Win 2k+ / OSX.3+</td>
-                        <td>1.9</td>
-                        <td>A</td>
-                      </tr>
-                      <tr class="odd" role="row">
-                        <td class="sorting_1">Gecko</td>
-                        <td>Camino 1.0</td>
-                        <td>OSX.2+</td>
-                        <td>1.8</td>
-                        <td>A</td>
-                      </tr>
-                      <tr class="even" role="row">
-                        <td class="sorting_1">Gecko</td>
-                        <td>Camino 1.5</td>
-                        <td>OSX.3+</td>
-                        <td>1.8</td>
-                        <td>A</td>
-                      </tr>
-                      <tr class="odd" role="row">
-                        <td class="sorting_1">Gecko</td>
-                        <td>Netscape 7.2</td>
-                        <td>Win 95+ / Mac OS 8.6-9.2</td>
-                        <td>1.7</td>
-                        <td>A</td>
-                      </tr>
-                      <tr class="even" role="row">
-                        <td class="sorting_1">Gecko</td>
-                        <td>Netscape Browser 8</td>
-                        <td>Win 98SE+</td>
-                        <td>1.7</td>
-                        <td>A</td>
-                      </tr>
-                      <tr class="odd" role="row">
-                        <td class="sorting_1">Gecko</td>
-                        <td>Netscape Navigator 9</td>
-                        <td>Win 98+ / OSX.2+</td>
-                        <td>1.8</td>
-                        <td>A</td>
-                      </tr>
-                      <tr class="even" role="row">
-                        <td class="sorting_1">Gecko</td>
-                        <td>Mozilla 1.0</td>
-                        <td>Win 95+ / OSX.1+</td>
-                        <td>1</td>
-                        <td>A</td>
-                      </tr>
+
                     </tbody>
-                    <tfoot>
-                      <tr>
-                        <th colspan="1" rowspan="1">Rendering engine</th>
-                        <th colspan="1" rowspan="1">Browser</th>
-                        <th colspan="1" rowspan="1">Platform(s)</th>
-                        <th colspan="1" rowspan="1">Engine version</th>
-                        <th colspan="1" rowspan="1">CSS grade</th>
-                      </tr>
-                    </tfoot>
                   </table>
                 </div>
               </div>
@@ -132,15 +62,28 @@
 
 <script>
 import $ from 'jquery'
+import api from '../../api'
+
 // Require needed datatables modules
 require('datatables.net')
 require('datatables.net-bs')
 
 export default {
   name: 'Tables',
+  data() {
+    return { users: [] }
+  },
   mounted() {
     this.$nextTick(() => {
-      $('#example1').DataTable()
+      const params = new URLSearchParams()
+      params.append('role', 3)
+      api
+        .request('get', 'users/?' + params.toString(), {}, { 'Authorization': localStorage.getItem('token') })
+        .then(response => {
+          this.users = response.data.results
+          setTimeout(() => { $('#tableUsers').DataTable() }, 2000)
+        })
+        .catch(console.log)
     })
   }
 }

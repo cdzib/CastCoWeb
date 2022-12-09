@@ -52,15 +52,17 @@ router.beforeEach((to, from, next) => {
 })
 
 sync(store, router)
-
 // Check local storage to handle refreshes
 if (window.localStorage) {
-  var localUserString = window.localStorage.getItem('user') || 'null'
-  var localUser = JSON.parse(localUserString)
-
-  if (localUser && store.state.user !== localUser) {
-    store.commit('SET_USER', localUser)
-    store.commit('SET_TOKEN', window.localStorage.getItem('token'))
+  var localUserString = window.localStorage.getItem('user') || null
+  try {
+    var localUser = JSON.parse(localUserString)
+    if (localUser && store.state.user !== localUser) {
+      store.commit('SET_USER', localUser)
+      store.commit('SET_TOKEN', window.localStorage.getItem('token'))
+    }
+  } catch (error) {
+    console.log(error)
   }
 }
 

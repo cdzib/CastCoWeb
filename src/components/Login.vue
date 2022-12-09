@@ -1,30 +1,33 @@
 <template>
   <div id="login">
     <img src="/static/img/logo.png" class="center-block logo">
-
-    <div class="text-center col-sm-12">
+    
+    <div class="text-center col-md-12 col-lg-4 col-xl-5"></div>
+    <div class="text-center col-md-12 col-lg-4 col-xl-5">
       <!-- login form -->
-      <form @submit.prevent="checkCreds">
+      <form @submit.prevent="checkCreds" class="signin-form">
         <div class="input-group">
           <span class="input-group-addon"><i class="fa fa-envelope"></i></span>
-          <input class="form-control" name="username" placeholder="Username" type="text" v-model="username">
+          <input class="form-control" name="email" placeholder="Username" type="text" v-model="email">
         </div>
 
         <div class="input-group">
           <span class="input-group-addon"><i class="fa fa-lock"></i></span>
           <input class="form-control" name="password" placeholder="Password" type="password" v-model="password">
         </div>
-        <button type="submit" v-bind:class="'btn btn-primary btn-lg ' + loading">Submit</button>
+        <button type="submit" v-bind:class="'btn btn-primary btn-lg ' + loading">Iniciar</button>
+        <button v-bind:class="'btn btn-primary btn-lg '">Registrar</button>
       </form>
-
       <!-- errors -->
       <div v-if=response class="text-red"><p class="vertical-5p lead">{{response}}</p></div>
     </div>
+    <div class="text-center col-md-12 col-lg-4 col-xl-5"></div>
   </div>
 </template>
 
 <script>
 import api from '../api'
+import jwtdecode from 'jwt-decode'
 
 export default {
   name: 'Login',
@@ -32,14 +35,14 @@ export default {
     return {
       section: 'Login',
       loading: '',
-      username: '',
+      email: '',
       password: '',
       response: ''
     }
   },
   methods: {
     checkCreds() {
-      const { username, password } = this
+      const { email, password } = this
 
       this.toggleLoading()
       this.resetResponse()
@@ -47,7 +50,7 @@ export default {
 
       /* Making API call to authenticate a user */
       api
-        .request('post', '/login', { username, password })
+        .request('post', 'token/', { email, password })
         .then(response => {
           this.toggleLoading()
 
@@ -66,20 +69,21 @@ export default {
 
             return
           }
-
           /* Setting user in the state and caching record to the localStorage */
-          if (data.user) {
-            var token = 'Bearer ' + data.token
+          if (data) {
+            var token = 'Bearer ' + data.access
 
-            this.$store.commit('SET_USER', data.user)
+            var decoded = jwtdecode(data.access)
+            console.log(decoded)
+            this.$store.commit('SET_USER', decoded.user)
             this.$store.commit('SET_TOKEN', token)
 
             if (window.localStorage) {
-              window.localStorage.setItem('user', JSON.stringify(data.user))
+              window.localStorage.setItem('user', JSON.stringify(decoded.user))
               window.localStorage.setItem('token', token)
             }
 
-            this.$router.push(data.redirect ? data.redirect : '/')
+            this.$router.push(data.redirect ? data.redirect : 'dashboard')
           }
         })
         .catch(error => {
@@ -150,10 +154,6 @@ body,
   }
 }
 @media (min-width: 1242px) {
-  form {
-    padding-left: 20em;
-    padding-right: 20em;
-  }
 
   .input-group input {
     height: 6em;
