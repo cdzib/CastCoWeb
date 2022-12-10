@@ -6,8 +6,12 @@
         <div class="box">
           <div class="box-header">
             <h3 class="box-title"></h3>
-            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modalUserLabel"><i
-                class="fa fa-plus"> </i> Agregar Nuevo</button>
+            <button id="btnModalCreate" v-on:click="openModal" type="button" class="btn btn-primary" data-toggle="modal"
+              data-target="#modalUserCreate"><i class="fa fa-plus"> </i> Agregar Nuevo</button>
+            <input id="btnModalEdit" type="hidden" class="btn btn-primary" data-toggle="modal"
+              data-target="#modalUserEdit" />
+            <input id="btnModalDelete" type="hidden" class="btn btn-primary" data-toggle="modal"
+              data-target="#modalUserDelete" />
           </div>
           <!-- /.box-header -->
           <div class="box-body">
@@ -26,20 +30,19 @@
                     class="table table-bordered table-striped dataTable">
                     <thead>
                       <tr role="row">
-                        <th aria-sort="ascending"
-                          style="width: 167px;" colspan="1" rowspan="1" aria-controls="example1" tabindex="0"
-                          class="sorting_asc">Email</th>
-                        <th style="width: 207px;" colspan="1"
-                          rowspan="1" aria-controls="example1" tabindex="0" class="sorting">Nombres</th>
-                        <th style="width: 142px;"
-                          colspan="1" rowspan="1" aria-controls="example1" tabindex="0" class="sorting">Apellidos
+                        <th aria-sort="ascending" style="width: 167px;" colspan="1" rowspan="1" aria-controls="example1"
+                          tabindex="0" class="sorting_asc">Email</th>
+                        <th style="width: 207px;" colspan="1" rowspan="1" aria-controls="example1" tabindex="0"
+                          class="sorting">Nombres</th>
+                        <th style="width: 142px;" colspan="1" rowspan="1" aria-controls="example1" tabindex="0"
+                          class="sorting">Apellidos
                         </th>
-                        <th style="width: 182px;"
-                          colspan="1" rowspan="1" aria-controls="example1" tabindex="0" class="sorting">Instagram</th>
-                        <th style="width: 101px;" colspan="1"
-                          rowspan="1" aria-controls="example1" tabindex="0" class="sorting">Rol</th>
-                        <th  style="width: 101px;" colspan="1"
-                          rowspan="1" aria-controls="example1" tabindex="0" class="sorting">Acciones</th>
+                        <th style="width: 182px;" colspan="1" rowspan="1" aria-controls="example1" tabindex="0"
+                          class="sorting">Instagram</th>
+                        <th style="width: 101px;" colspan="1" rowspan="1" aria-controls="example1" tabindex="0"
+                          class="sorting">Rol</th>
+                        <th style="width: 101px;" colspan="1" rowspan="1" aria-controls="example1" tabindex="0"
+                          class="sorting">Acciones</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -50,8 +53,8 @@
                         <td>{{ user.instagram }}</td>
                         <td>{{ user.role }}</td>
                         <td>
-                          <button class="btn"><i class="fa fa-trash"></i></button>
-                          <button class="btn" v-on:click="editUser"><i class="fa fa-edit"></i></button>
+                          <button class="btn" v-on:click="confirmDelete(user)"><i class="fa fa-trash"></i></button>
+                          <button class="btn" v-on:click="editUser(user)"><i class="fa fa-edit"></i></button>
                         </td>
                       </tr>
                     </tbody>
@@ -65,13 +68,13 @@
       </div>
     </div>
 
-    <div class="modal fade" id="modalUserLabel" tabindex="-1" role="dialog" aria-labelledby="modalUserLabel"
+    <div class="modal fade" id="modalUserCreate" tabindex="-1" role="dialog" aria-labelledby="modalUserCreateLabel"
       aria-hidden="true">
       <div class="modal-dialog" role="document">
         <div class="modal-content">
           <div class="modal-header">
-            <h5 class="modal-title" id="modalUserLabel">Nuevo Usuario</h5>
-            <button type="button" class="close" id="close" data-dismiss="modal" aria-label="Close">
+            <h5 class="modal-title" id="modalUserCreateLabel">Nuevo Usuario</h5>
+            <button type="button" class="close" id="closeCreate" data-dismiss="modal" aria-label="Close">
               <span aria-hidden="true">&times;</span>
             </button>
           </div>
@@ -79,7 +82,7 @@
             <form>
               <div class="form-group">
                 <label for="email" class="col-form-label">Email:</label>
-                <input type="text" class="form-control" id="email" v-model="user.email" required>
+                <input type="text" class="form-control" id="email" v-model="user.email">
                 <div v-if=error.email class="text-red">
                   <p>{{ error.email }}</p>
                 </div>
@@ -97,6 +100,7 @@
                 <input class="form-control" id="instagram" v-model="user.instagram" />
               </div>
               <div class="form-group">
+                <input class="form-control" id="id" type="hidden" v-model="user.id" />
                 <input class="form-control" id="role" type="hidden" v-model="user.role" />
               </div>
             </form>
@@ -104,6 +108,124 @@
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
             <button type="button" class="btn btn-primary" v-on:click="saveUser">Guardar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="modal fade" id="modalUserEdit" tabindex="-1" role="dialog" aria-labelledby="modalUserEditLabel"
+      aria-hidden="true">
+      <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="modalUserEditLabel">Actualizar Usuario</h5>
+            <button type="button" class="close" id="closeEdit" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <form>
+              <div class="row">
+
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label for="email" class="col-form-label">Email:</label>
+                    <input type="text" class="form-control" id="email" v-model="user.email">
+                  </div>
+                  <div class="form-group">
+                    <label for="name" class="col-form-label">Nombre:</label>
+                    <input class="form-control" id="name" v-model="user.name" />
+                  </div>
+                  <div class="form-group">
+                    <label for="age" class="col-form-label">Edad:</label>
+                    <input type="number" class="form-control" id="age" v-model="user.age" max="100" min="18" />
+                  </div>
+                  <div class="form-group">
+                    <label for="state" class="col-form-label">Estado:</label>
+                    <input class="form-control" id="state" v-model="user.state" />
+                  </div>
+                  <div class="form-group">
+                    <label for="agency" class="col-form-label">Agencia:</label>
+                    <input class="form-control" id="agency" v-model="user.agency" />
+                  </div>
+                  <div class="form-group">
+                    <label for="gender" class="col-form-label">Genero:</label>
+                    <select name="gender" class="form-control" id="gender" v-model="user.gender">
+                      <option value="0" selected>Elegir Genero</option>
+                      <option value="1">Hombre</option>
+                      <option value="2">Mujer</option>
+                      <option value="3">No binario</option>
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <label for="lgtbq" class="col-form-label">LGTBQ:</label>
+                  </div>
+                  <div class="form-check">
+                    <input class="form-check-input" type="checkbox" value="" id="flexCheckChecked" v-model="user.lgtbq">
+                    <label class="form-check-label" for="flexCheckChecked">
+                      Pertenesco a la comunidad
+                    </label>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label for="phone" class="col-form-label">Telefono:</label>
+                    <input class="form-control" id="phone" v-model="user.phone" />
+                  </div>
+                  <div class="form-group">
+                    <label for="height" class="col-form-label">Altura:</label>
+                    <input class="form-control" id="height" v-model="user.height" />
+                  </div>
+                  <div class="form-group">
+                    <label for="shoe_size" class="col-form-label"># Calzado:</label>
+                    <input class="form-control" id="shoe_size" v-model="user.shoe_size" />
+                  </div>
+                  <div class="form-group">
+                    <label for="pant_size" class="col-form-label"># Pantalon:</label>
+                    <input class="form-control" id="pant_size" v-model="user.pant_size" />
+                  </div>
+                  <div class="form-group">
+                    <label for="shirt_size" class="col-form-label"># Camisa:</label>
+                    <input class="form-control" id="shirt_size" v-model="user.shirt_size" />
+                  </div>
+                  <div class="form-group">
+                    <label for="job_occupation" class="col-form-label">Ocupacion:</label>
+                    <input class="form-control" id="job_occupation" v-model="user.job_occupation" />
+                  </div>
+                  <div class="form-group">
+                    <label for="skills" class="col-form-label">Skills:</label>
+                    <textarea class="form-control" id="skills" v-model="user.skills"></textarea>
+                  </div>
+                </div>
+              </div>
+              <div class="form-group">
+                <input class="form-control" id="id" type="hidden" v-model="user.id" />
+                <input class="form-control" id="role" type="hidden" v-model="user.role" />
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+            <button type="button" class="btn btn-primary" v-on:click="updateUser(user)">Actualizar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="modal fade" id="modalUserDelete" tabindex="-1" role="dialog" aria-labelledby="modalUserDeleteLabel"
+      aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="modalUserDeleteLabel">Eliminar Usuario</h5>
+            <button type="button" class="close" id="closeDelete" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <p>Esta seguro que quiere eliminar al usuario?</p>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+            <button type="button" class="btn btn-danger" v-on:click="deleteUser">Eliminar</button>
           </div>
         </div>
       </div>
@@ -126,10 +248,24 @@ export default {
   data() {
     return {
       user: {
+        id: 0,
         email: '',
         first_name: '',
         last_name: '',
         instagram: '',
+        photo: null,
+        age: 18,
+        state: 0,
+        agency: 0,
+        gender: 0,
+        lgtbq: false,
+        phone: null,
+        height: 0,
+        shoe_size: 0,
+        pant_size: 0,
+        shirt_size: 0,
+        job_occupation: '',
+        skills: 'dddddddddddd',
         role: util.TALENT
       },
       error: {
@@ -147,17 +283,62 @@ export default {
     })
   },
   methods: {
+    openModal() {
+      this.user = {
+        id: 0,
+        email: '',
+        first_name: '',
+        last_name: '',
+        instagram: '',
+        photo: null,
+        age: 0,
+        state: 0,
+        agency: 0,
+        gender: 0,
+        lgtbq: false,
+        phone: null,
+        height: 0,
+        shoe_size: 0,
+        pant_size: 0,
+        shirt_size: 0,
+        job_occupation: '',
+        skills: '',
+        role: util.TALENT
+      }
+    },
+    updateUser(dUser) {
+      api
+        .request('patch', 'users/' + dUser.id + '/', this.user, { 'Authorization': localStorage.getItem('token') })
+        .then(response => {
+          location.reload(true)
+          $('#closeEdit').trigger('click')
+        })
+        .catch(error => {
+          if (error.response) {
+            var errors = error.response.data
+            this.error.email = errors.email[0]
+          }
+        })
+    },
     saveUser() {
       api
         .request('post', 'users/', this.user, { 'Authorization': localStorage.getItem('token') })
         .then(response => {
-          this.callUser()
-          $('#close').trigger('click')
+          location.reload(true)
+          $('#closeCreate').trigger('click')
         })
-        .catch(console.log)
+        .catch(error => {
+          if (error.response) {
+            var errors = error.response.data
+            this.error.email = errors.email[0]
+          }
+        })
     },
-    editUser() {
-      $('#modalUserLabel').modal('show')
+    editUser(dUser) {
+      this.isNew = false
+      console.log(dUser)
+      Object.assign(this.user, dUser)
+      $('#btnModalEdit').trigger('click')
     },
     callUser() {
       const params = new URLSearchParams()
@@ -175,6 +356,26 @@ export default {
           }, 1000)
         })
         .catch(console.log)
+    },
+    confirmDelete(dUser) {
+      this.user = dUser
+      $('#btnModalDelete').trigger('click')
+    },
+    deleteUser() {
+      $('#closeDelete').trigger('click')
+      console.log(this.user)
+      api
+        .request('delete', 'users/' + this.user.id + '/', {}, { 'Authorization': localStorage.getItem('token') })
+        .then(response => {
+          this.callUser()
+          $('#closeCreate').trigger('click')
+        })
+        .catch(error => {
+          if (error.response) {
+            var errors = error.response.data
+            this.error.email = errors.email[0]
+          }
+        })
     }
   }
 }

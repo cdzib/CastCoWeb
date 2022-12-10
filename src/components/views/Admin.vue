@@ -228,7 +228,7 @@ export default {
       api
         .request('put', 'users/' + dUser.id + '/', this.user, { 'Authorization': localStorage.getItem('token') })
         .then(response => {
-          this.callUser()
+          location.reload(true)
           $('#closeEdit').trigger('click')
         })
         .catch(error => {
@@ -242,7 +242,7 @@ export default {
       api
         .request('post', 'users/', this.user, { 'Authorization': localStorage.getItem('token') })
         .then(response => {
-          this.callUser()
+          location.reload(true)
           $('#closeCreate').trigger('click')
         })
         .catch(error => {
