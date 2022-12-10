@@ -1,11 +1,15 @@
 <template>
   <section class="content">
     <div class="row center-block">
-      <h2>Data tables</h2>
+      <h2></h2>
       <div class="col-md-12">
         <div class="box">
           <div class="box-header">
-            <h3 class="box-title">Data Table With Full Features</h3>
+            <h3 class="box-title"></h3>
+            <button id="btnModalCreate" v-on:click="openModal" type="button" class="btn btn-primary" data-toggle="modal"
+              data-target="#modalUserCreate"><i class="fa fa-plus"> </i> Agregar Nuevo</button>
+              <input id="btnModalEdit" type="hidden" class="btn btn-primary" data-toggle="modal"
+              data-target="#modalUserEdit"/>
           </div>
           <!-- /.box-header -->
           <div class="box-body">
@@ -24,18 +28,19 @@
                     class="table table-bordered table-striped dataTable">
                     <thead>
                       <tr role="row">
-                        <th aria-label="Rendering engine: activate to sort column descending" aria-sort="ascending"
-                          style="width: 167px;" colspan="1" rowspan="1" aria-controls="example1" tabindex="0"
-                          class="sorting_asc">Email</th>
-                        <th aria-label="Browser: activate to sort column ascending" style="width: 207px;" colspan="1"
-                          rowspan="1" aria-controls="example1" tabindex="0" class="sorting">Nombres</th>
-                        <th aria-label="Engine version: activate to sort column ascending" style="width: 142px;"
-                          colspan="1" rowspan="1" aria-controls="example1" tabindex="0" class="sorting">Apellidos
+                        <th aria-sort="ascending" style="width: 167px;" colspan="1" rowspan="1" aria-controls="example1"
+                          tabindex="0" class="sorting_asc">Email</th>
+                        <th style="width: 207px;" colspan="1" rowspan="1" aria-controls="example1" tabindex="0"
+                          class="sorting">Nombres</th>
+                        <th style="width: 142px;" colspan="1" rowspan="1" aria-controls="example1" tabindex="0"
+                          class="sorting">Apellidos
                         </th>
-                        <th aria-label="Platform(s): activate to sort column ascending" style="width: 182px;"
-                          colspan="1" rowspan="1" aria-controls="example1" tabindex="0" class="sorting">Instagram</th>
-                        <th aria-label="CSS grade: activate to sort column ascending" style="width: 101px;" colspan="1"
-                          rowspan="1" aria-controls="example1" tabindex="0" class="sorting">Rol</th>
+                        <th style="width: 182px;" colspan="1" rowspan="1" aria-controls="example1" tabindex="0"
+                          class="sorting">Instagram</th>
+                        <th style="width: 101px;" colspan="1" rowspan="1" aria-controls="example1" tabindex="0"
+                          class="sorting">Rol</th>
+                        <th style="width: 101px;" colspan="1" rowspan="1" aria-controls="example1" tabindex="0"
+                          class="sorting">Acciones</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -45,6 +50,10 @@
                         <td>{{ user.last_name }}</td>
                         <td>{{ user.instagram }}</td>
                         <td>{{ user.role }}</td>
+                        <td>
+                          <button class="btn"><i class="fa fa-trash"></i></button>
+                          <button class="btn" v-on:click="editUser(user)"><i class="fa fa-edit"></i></button>
+                        </td>
                       </tr>
 
                     </tbody>
@@ -57,34 +66,194 @@
         </div>
       </div>
     </div>
+
+    <div class="modal fade" id="modalUserCreate" tabindex="-1" role="dialog" aria-labelledby="modalUserCreateLabel"
+      aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="modalUserCreateLabel">Nuevo Usuario</h5>
+            <button type="button" class="close" id="closeCreate" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <form>
+              <div class="form-group">
+                <label for="email" class="col-form-label">Email:</label>
+                <input type="text" class="form-control" id="email" v-model="user.email">
+                <div v-if=error.email class="text-red">
+                  <p>{{ error.email }}</p>
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="first_name" class="col-form-label">Nombres:</label>
+                <input class="form-control" id="first_name" v-model="user.first_name" />
+              </div>
+              <div class="form-group">
+                <label for="last_name" class="col-form-label">Apellidos:</label>
+                <input class="form-control" id="last_name" v-model="user.last_name" />
+              </div>
+              <div class="form-group">
+                <label for="instagram" class="col-form-label">Instagram:</label>
+                <input class="form-control" id="instagram" v-model="user.instagram" />
+              </div>
+              <div class="form-group">
+                <input class="form-control" id="id" type="hidden" v-model="user.id" />
+                <input class="form-control" id="role" type="hidden" v-model="user.role" />
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+            <button type="button" class="btn btn-primary" v-on:click="saveUser">Guardar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="modal fade" id="modalUserEdit" tabindex="-1" role="dialog" aria-labelledby="modalUserEditLabel"
+      aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="modalUserEditLabel">Actualizar Usuario</h5>
+            <button type="button" class="close" id="closeEdit" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <form>
+              <div class="form-group">
+                <label for="email" class="col-form-label">Email:</label>
+                <input type="text" class="form-control" id="email" v-model="user.email">
+              </div>
+              <div class="form-group">
+                <label for="first_name" class="col-form-label">Nombres:</label>
+                <input class="form-control" id="first_name" v-model="user.first_name" />
+              </div>
+              <div class="form-group">
+                <label for="last_name" class="col-form-label">Apellidos:</label>
+                <input class="form-control" id="last_name" v-model="user.last_name" />
+              </div>
+              <div class="form-group">
+                <label for="instagram" class="col-form-label">Instagram:</label>
+                <input class="form-control" id="instagram" v-model="user.instagram" />
+              </div>
+              <div class="form-group">
+                <input class="form-control" id="id" type="hidden" v-model="user.id" />
+                <input class="form-control" id="role" type="hidden" v-model="user.role" />
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+            <button type="button" class="btn btn-primary"
+              v-on:click="updateUser(user)">Actualizar</button>
+          </div>
+        </div>
+      </div>
+    </div>
   </section>
+
 </template>
 
 <script>
 import $ from 'jquery'
 import api from '../../api'
+import util from '../../utils/util'
 
 // Require needed datatables modules
 require('datatables.net')
 require('datatables.net-bs')
 
 export default {
-  name: 'Tables',
+  name: 'Admins',
   data() {
-    return { users: [] }
+    return {
+      user: {
+        id: 0,
+        email: '',
+        first_name: '',
+        last_name: '',
+        instagram: '',
+        role: util.MANAGER
+      },
+      error: {
+        email: '',
+        first_name: '',
+        last_name: '',
+        instagram: ''
+      },
+      users: []
+    }
   },
   mounted() {
     this.$nextTick(() => {
+      this.callUser()
+    })
+  },
+  methods: {
+    openModal() {
+      this.user = {
+        id: 0,
+        email: '',
+        first_name: '',
+        last_name: '',
+        instagram: '',
+        role: util.MANAGER
+      }
+    },
+    updateUser(dUser) {
+      api
+        .request('put', 'users/' + dUser.id + '/', this.user, { 'Authorization': localStorage.getItem('token') })
+        .then(response => {
+          this.callUser()
+          $('#closeEdit').trigger('click')
+        })
+        .catch(error => {
+          if (error.response) {
+            var errors = error.response.data
+            this.error.email = errors.email[0]
+          }
+        })
+    },
+    saveUser() {
+      api
+        .request('post', 'users/', this.user, { 'Authorization': localStorage.getItem('token') })
+        .then(response => {
+          this.callUser()
+          $('#closeCreate').trigger('click')
+        })
+        .catch(error => {
+          if (error.response) {
+            var errors = error.response.data
+            this.error.email = errors.email[0]
+          }
+        })
+    },
+    editUser(dUser) {
+      console.log(dUser)
+      this.isNew = false
+      this.user = dUser
+      $('#btnModalEdit').trigger('click')
+    },
+    callUser() {
       const params = new URLSearchParams()
-      params.append('role', 3)
+      params.append('role', util.MANAGER)
       api
         .request('get', 'users/?' + params.toString(), {}, { 'Authorization': localStorage.getItem('token') })
         .then(response => {
           this.users = response.data.results
-          setTimeout(() => { $('#tableUsers').DataTable() }, 2000)
+          setTimeout(() => {
+            $('#tableUsers').DataTable({
+              'language': {
+                'url': '//cdn.datatables.net/plug-ins/1.10.16/i18n/Spanish.json'
+              }
+            })
+          }, 1000)
         })
         .catch(console.log)
-    })
+    }
   }
 }
 </script>

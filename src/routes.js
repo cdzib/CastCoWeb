@@ -12,7 +12,7 @@ import ServerView from './components/views/Server.vue'
 import ReposView from './components/views/Repos.vue'
 import AdminView from './components/views/Admin.vue'
 import TalentView from './components/views/Talent.vue'
-
+import AgencyView from './components/views/Agency.vue'
 // Routes
 const routes = [
   {
@@ -77,7 +77,7 @@ const routes = [
       },
       {
         path: 'agencies',
-        component: TalentView,
+        component: AgencyView,
         name: 'Agencias',
         meta: {description: 'Listado de Agencias', requiresAuth: true}
       }
