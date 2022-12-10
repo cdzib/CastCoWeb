@@ -8,8 +8,10 @@
             <h3 class="box-title"></h3>
             <button id="btnModalCreate" v-on:click="openModal" type="button" class="btn btn-primary" data-toggle="modal"
               data-target="#modalUserCreate"><i class="fa fa-plus"> </i> Agregar Nuevo</button>
-              <input id="btnModalEdit" type="hidden" class="btn btn-primary" data-toggle="modal"
-              data-target="#modalUserEdit"/>
+            <input id="btnModalEdit" type="hidden" class="btn btn-primary" data-toggle="modal"
+              data-target="#modalUserEdit" />
+            <input id="btnModalDelete" type="hidden" class="btn btn-primary" data-toggle="modal"
+              data-target="#modalUserDelete" />
           </div>
           <!-- /.box-header -->
           <div class="box-body">
@@ -51,7 +53,7 @@
                         <td>{{ user.instagram }}</td>
                         <td>{{ user.role }}</td>
                         <td>
-                          <button class="btn"><i class="fa fa-trash"></i></button>
+                          <button class="btn" v-on:click="confirmDelete(user)"><i class="fa fa-trash"></i></button>
                           <button class="btn" v-on:click="editUser(user)"><i class="fa fa-edit"></i></button>
                         </td>
                       </tr>
@@ -147,8 +149,27 @@
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-            <button type="button" class="btn btn-primary"
-              v-on:click="updateUser(user)">Actualizar</button>
+            <button type="button" class="btn btn-primary" v-on:click="updateUser(user)">Actualizar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="modal fade" id="modalUserDelete" tabindex="-1" role="dialog" aria-labelledby="modalUserDeleteLabel"
+      aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="modalUserDeleteLabel">Eliminar Usuario</h5>
+            <button type="button" class="close" id="closeDelete" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <p>Esta seguro que quiere eliminar al usuario?</p>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+            <button type="button" class="btn btn-danger" v-on:click="deleteUser">Eliminar</button>
           </div>
         </div>
       </div>
@@ -253,6 +274,26 @@ export default {
           }, 1000)
         })
         .catch(console.log)
+    },
+    confirmDelete(dUser) {
+      this.user = dUser
+      $('#btnModalDelete').trigger('click')
+    },
+    deleteUser() {
+      $('#closeDelete').trigger('click')
+      console.log(this.user)
+      api
+        .request('delete', 'users/' + this.user.id + '/', {}, { 'Authorization': localStorage.getItem('token') })
+        .then(response => {
+          this.callUser()
+          $('#closeCreate').trigger('click')
+        })
+        .catch(error => {
+          if (error.response) {
+            var errors = error.response.data
+            this.error.email = errors.email[0]
+          }
+        })
     }
   }
 }
