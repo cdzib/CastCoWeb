@@ -83,7 +83,7 @@
             <form>
               <div class="form-group">
                 <label for="email" class="col-form-label">Email:</label>
-                <input type="text" class="form-control" id="email" v-model="user.email">
+                <input type="text" class="form-control" id="email" v-model="user.email" @blur="validateEmail">
                 <div v-if=error.email class="text-red">
                   <p>{{ error.email }}</p>
                 </div>
@@ -127,7 +127,7 @@
             <form>
               <div class="form-group">
                 <label for="email" class="col-form-label">Email:</label>
-                <input type="text" class="form-control" id="email" v-model="user.email">
+                <input type="text" class="form-control" id="email" v-model="user.email" @blur="validateEmail">
               </div>
               <div class="form-group">
                 <label for="first_name" class="col-form-label">Nombres:</label>
@@ -294,6 +294,14 @@ export default {
             this.error.email = errors.email[0]
           }
         })
+    },
+    validateEmail(e) {
+      var email = e.target.value
+      if (/^\w+([\\.-]?\w+)*@\w+([\\.-]?\w+)*(\.\w{2,3})+$/.test(email)) {
+        this.error.email = ''
+      } else {
+        this.error.email = 'Ingrese un correo valido'
+      }
     }
   }
 }
